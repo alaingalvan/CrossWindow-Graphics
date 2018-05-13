@@ -1,4 +1,4 @@
-# CrossWindow-Graphics
+# CrossWindowGraphics
 
 A library to simplify creating data structures needed for graphics APIs such as a Vulkan `vk::Surface`, an OpenGL context, a DirectX `ComPtr<IDXGISwapChain>`, or Metal `MTLView`.
 
