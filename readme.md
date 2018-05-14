@@ -46,11 +46,11 @@ void xmain(int argc, char** argv)
 #if defined(XWIN_VULKAN)
   vk::Surface surface = xwin::createSurface(window, instance);
 #elif defined(XWIN_OPENGL)
- // ...
+  // ...
 #elif defined(XWIN_DIRECTX)
   ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(instance, factory);
 #elif defined(XWIN_METAL)
- // ...
+  // ...
 #endif
 }
 

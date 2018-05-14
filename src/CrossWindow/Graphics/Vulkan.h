@@ -31,7 +31,7 @@ vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance &instance)
     info.pNext = NULL;
     info.flags = 0;
     info.hinstance = reinterpret_cast<HINSTANCE>(delegate->hinstance);
-    info.hwnd = desc.hwnd;
+    info.hwnd = delegate->hwnd;
 
     result = vkCreateWin32SurfaceKHR(instance, &info, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_WAYLAND_KHR)
@@ -85,7 +85,7 @@ vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance &instance)
     info.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
     info.pNext = NULL;
     info.flags = 0;
-    info.pView = desc.window;
+    info.pView = delegate->window;
 
     result = vkCreateMacOSSurfaceMVK(instance, &info, NULL, &surface);
 #endif
