@@ -1,5 +1,7 @@
 #pragma once
 
+#if defined(XGFX_VULKAN)
+
 #if defined(XWIN_WINDOWS)
 #define VK_USE_PLATFORM_WIN32_KHR
 #if defined(XWIN_MACOS)
@@ -14,7 +16,7 @@
 
 #include "vulkan/vulkan.hpp"
 
-namespace xwin
+namespace xgfx
 {
 
 vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance &instance)
@@ -96,3 +98,4 @@ vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance &instance)
     return vk::SurfaceKHR();
 }
 }
+#endif

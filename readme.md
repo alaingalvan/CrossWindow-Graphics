@@ -1,5 +1,7 @@
 # CrossWindowGraphics
 
+[![License][license-img]][license-url]
+
 A library to simplify creating data structures needed for graphics APIs such as a Vulkan `vk::Surface`, an OpenGL context, a DirectX `ComPtr<IDXGISwapChain>`, or Metal `MTLView`.
 
 ## Supports
@@ -28,6 +30,9 @@ add_subdirectories(external/CrossWindow-Graphics)
 target_include_directories(exteral/CrossWIndow-Graphics/src)
 
 # Set up CrossWindow as usual...
+
+# Make sure to add a preprocessor defintion for your target graphics API:
+target_compile_definitions(${PROJECT_NAME} PRIVATE XGFX_VULKAN=1)
 ```
 
 ## Usage
@@ -43,11 +48,11 @@ void xmain(int argc, char** argv)
   
   // ...
   
-#if defined(XWIN_VULKAN)
+#if defined(XGFX_VULKAN)
   vk::Surface surface = xwin::createSurface(window, instance);
 #elif defined(XWIN_OPENGL)
   // ...
-#elif defined(XWIN_DIRECTX)
+#elif defined(XGFX_DIRECTX)
   ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(instance, factory);
 #elif defined(XWIN_METAL)
   // ...
@@ -56,10 +61,18 @@ void xmain(int argc, char** argv)
 
 ```
 
-## Development
+### Preprocessor Definitions
 
-Be sure to have [CMake](https://cmake.org) Installed.
-
-| CMake Options | Description |
+| Definition | Description |
 |:-------------:|:-----------:|
-| `XWIN_GRAPHICS_API` | Whether or not unit tests are enabled. Defaults to `VULKAN`, Can be `VULKAN`, `DIRECTX`, `METAL` or `OPENGL` depending on `XWIN_OS`. |
+| `XGFX_VULKAN` | The latest release of Vulkan. |
+| `XGFX_OPENGL` | The latest release of OpenGL / OpenGL ES. |
+| `XGFX_DIRECTX` | The latest release of DirectX. |
+| `XGFX_METAL` | The latest release of Metal. |
+
+## License
+
+CrossWindow is licensed as either **MIT** or **Apache-2.0**, whichever you would prefer.
+
+[license-img]: https://img.shields.io/:license-mit-blue.svg?style=flat-square
+[license-url]: https://opensource.org/licenses/MIT

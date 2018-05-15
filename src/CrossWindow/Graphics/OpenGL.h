@@ -1,8 +1,11 @@
 #pragma once
 
-namespace xwin
+#if defined(XGFX_OPENGL)
+
+namespace xgfx
 {
 #if defined(XWIN_WINDOWS)
+
 HGLRC createContext(Window *window)
 {
   WindowDelegate delegate = window->getDelegate();
@@ -45,4 +48,7 @@ bool destroyContext(HGLRC context)
   return true;
 }
 #endif
+
 }
+
+#endif
