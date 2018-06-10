@@ -24,7 +24,7 @@ Then in your `CMakeLists.txt` file, include the following:
 
 ```cmake
 # 🤯 Since it's a header only library, you just need to include the headers!
-target_include_directories(exteral/CrossWIndow-Graphics/src)
+target_include_directories(exteral/crosswindow-graphics/src)
 
 # Set up CrossWindow as usual...
 
@@ -49,7 +49,7 @@ void xmain(int argc, char** argv)
   vk::Surface surface = xwin::createSurface(window, instance);
 #elif defined(XGFX_OPENGL)
   // ...
-#elif defined(XGFX_DIRECTX)
+#elif defined(XGFX_DIRECTX12)
   ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(instance, factory);
 #elif defined(XWIN_METAL)
   // ...
