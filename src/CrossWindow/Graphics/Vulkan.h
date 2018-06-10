@@ -2,13 +2,13 @@
 
 #if defined(XGFX_VULKAN)
 
-#if defined(XWIN_WINDOWS)
+#if defined(XWIN_WIN32)
 #define VK_USE_PLATFORM_WIN32_KHR
-#if defined(XWIN_MACOS)
+#if defined(XWIN_COCOA)
 #define VK_USE_PLATFORM_MACOS_MVK
-#if defined(XWIN_LINUX)
-#define VK_USE_PLATFORM_WAYLAND_KHR
-#if defined(XWIN_IOS)
+#if defined(XWIN_XCB)
+#define VK_USE_PLATFORM_XCB_KHR
+#if defined(XWIN_UIKIT)
 #define VK_USE_PLATFORM_IOS_MVK
 #if defined(XWIN_ANDROID)
 #define VK_USE_PLATFORM_ANDROID_KHR

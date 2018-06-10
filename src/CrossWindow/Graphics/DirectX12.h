@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(XGFX_DIRECTX) && defined(XWIN_WINDOWS)
+#if defined(XGFX_DIRECTX12) && defined(XWIN_WINDOWS)
 namespace xwin
 {
   ComPtr<IDXGISwapChain1> createSwapchain(Window* window, ComPtr<IDXGIFactory4> factory, ComPtr<ID3D12CommandQueue> queue)

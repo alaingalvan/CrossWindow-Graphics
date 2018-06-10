@@ -62,10 +62,10 @@ void xmain(int argc, char** argv)
 
 | Definition | Description |
 |:-------------:|:-----------:|
-| `XGFX_VULKAN` | The latest release of Vulkan. |
-| `XGFX_OPENGL` | The latest release of OpenGL / OpenGL ES. |
-| `XGFX_DIRECTX` | The latest release of DirectX. |
-| `XGFX_METAL` | The latest release of Metal. |
+| `XGFX_VULKAN` |  Vulkan 1.x. |
+| `XGFX_OPENGL` |  OpenGL 4.x and OpenGL ES 3.x. |
+| `XGFX_DIRECTX12` | DirectX 12.x. |
+| `XGFX_METAL` | Metal 1 or 2. |
 
 ## License
 
