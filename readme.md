@@ -1,4 +1,4 @@
-# CrossWindowGraphics
+# CrossWindow-Graphics
 
 [![License][license-img]][license-url]
 
@@ -6,7 +6,7 @@ A library to simplify creating data structures needed for graphics APIs such as 
 
 ## Supports
 
- - 🌋 Vulkan 
+ - 🌋 Vulkan
  - ⚪ OpenGL 4.x / 🌐 WebGL
  - ❎DirectX 12
  - 🤖 Metal 2 
@@ -17,15 +17,12 @@ First add the repo as a submodule in your dependencies folder such as `external/
 
 ```
 cd external
-git submodule add https://github.com/alaingalvan/CrossWindow-Graphics.git
+git submodule add https://github.com/alaingalvan/crosswindow-graphics.git
 ```
 
 Then in your `CMakeLists.txt` file, include the following:
 
 ```cmake
-# ⬇ Add your dependency:
-add_subdirectories(external/CrossWindow-Graphics)
-
 # 🤯 Since it's a header only library, you just need to include the headers!
 target_include_directories(exteral/CrossWIndow-Graphics/src)
 
@@ -50,7 +47,7 @@ void xmain(int argc, char** argv)
   
 #if defined(XGFX_VULKAN)
   vk::Surface surface = xwin::createSurface(window, instance);
-#elif defined(XWIN_OPENGL)
+#elif defined(XGFX_OPENGL)
   // ...
 #elif defined(XGFX_DIRECTX)
   ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(instance, factory);
