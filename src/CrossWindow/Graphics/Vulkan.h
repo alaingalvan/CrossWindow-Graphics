@@ -16,11 +16,11 @@
 
 #include "vulkan/vulkan.hpp"
 
-#ifdef XGFX_IMPL
+
 namespace xgfx
 {
 
-vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
+inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
 {
 
     const xwin::WindowDelegate& del = window->getDelegate();
@@ -103,5 +103,4 @@ vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
     return vk::SurfaceKHR();
 }
 }
-#endif
 #endif
