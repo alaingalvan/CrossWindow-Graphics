@@ -1,9 +1,9 @@
 #pragma once
 
-#if defined(XGFX_DIRECTX12)
+#if ( defined(XWIN_WIN32) || defined(XWIN_UWP) ) && defined(XGFX_DIRECTX12)
 namespace xwin
 {
-  ComPtr<IDXGISwapChain1> createSwapchain(Window* window, ComPtr<IDXGIFactory4> factory, ComPtr<ID3D12CommandQueue> queue, DXGI_SWAP_CHAIN_DESC1* swapChainDesc)
+  inline ComPtr<IDXGISwapChain1> createSwapchain(Window* window, ComPtr<IDXGIFactory4> factory, ComPtr<ID3D12CommandQueue> queue, DXGI_SWAP_CHAIN_DESC1* swapchainDesc)
   {
     WindowDelegate delegate = window->getDelegate();
 

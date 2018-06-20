@@ -23,6 +23,15 @@ git submodule add https://github.com/alaingalvan/crosswindow-graphics.git
 Then in your `CMakeLists.txt` file, include the following:
 
 ```cmake
+add_subdirectory(external/crosswindow-graphics)
+
+target_link_libraries(
+    ${PROJECT_NAME}
+    CrossWindowGraphics
+)
+
+# Or...
+
 # 🤯 Since it's a header only library, you just need to include the headers!
 target_include_directories(exteral/crosswindow-graphics/src)
 
@@ -47,12 +56,12 @@ void xmain(int argc, char** argv)
   
 #if defined(XGFX_VULKAN)
 
-  vk::Surface surface = xwin::createSurface(window, instance);
+  vk::Surface surface = xwin::createSurface(&window, instance);
 
 #elif defined(XGFX_OPENGL)
   // Platform specific context data can be found inside xwin::OpenGLState
   xwin::OpenGLDesc desc;
-  xwin::OpenGLState state = xwin::createContext(window, desc);
+  xwin::OpenGLState state = xwin::createContext(&window, desc);
 
   xwin::setContext(state);
 
@@ -62,11 +71,11 @@ void xmain(int argc, char** argv)
 
 #elif defined(XGFX_DIRECTX12)
 
-  ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(instance, factory);
+  ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(&window, factory, queue, &swapchainDesc);
 
 #elif defined(XWIN_METAL)
   // A pointer to MTKView will only work on an `.mm` file:
-  MTKView* view = xwin::createMetalView(window);
+  MTKView* view = xwin::createMetalView(&window);
   id<MTLDevice> device = view.device;
   // ...
 #endif
@@ -75,6 +84,12 @@ void xmain(int argc, char** argv)
 ```
 
 ### Preprocessor Definitions
+
+| CMake Options | Description |
+|:-------------:|:-----------:|
+| `XGFX_PROTOCOL` | The protocol to use for your graphics API, defaults to `VULKAN`, can be can be `VULKAN`, `OPENGL`, `DIRECTX12`, or `METAL`. |
+
+Alternatively you can set the following preprocessor definitions manually:
 
 | Definition | Description |
 |:-------------:|:-----------:|
