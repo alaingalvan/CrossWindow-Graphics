@@ -7,7 +7,7 @@ A library to simplify creating data structures needed for graphics APIs such as 
 ## Supports
 
  - 🌋 Vulkan
- - ⚪ OpenGL 4.x / 🌐 WebGL
+ - ⚪ OpenGL 4.x / OpenGL ES 3.x / 🌐 WebGL
  - ❎DirectX 12
  - 🤖 Metal 2 
 
@@ -46,12 +46,28 @@ void xmain(int argc, char** argv)
   // ...
   
 #if defined(XGFX_VULKAN)
+
   vk::Surface surface = xwin::createSurface(window, instance);
+
 #elif defined(XGFX_OPENGL)
-  // ...
+  // Platform specific context data can be found inside xwin::OpenGLState
+  xwin::OpenGLDesc desc;
+  xwin::OpenGLState state = xwin::createContext(window, desc);
+
+  xwin::setContext(state);
+
+  xwin::unsetContext(state);
+
+  xwin::destroyContext(state);
+
 #elif defined(XGFX_DIRECTX12)
+
   ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(instance, factory);
+
 #elif defined(XWIN_METAL)
+  // A pointer to MTKView will only work on an `.mm` file:
+  MTKView* view = xwin::createMetalView(window);
+  id<MTLDevice> device = view.device;
   // ...
 #endif
 }
