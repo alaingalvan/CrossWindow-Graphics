@@ -2,7 +2,7 @@
 
 [![License][license-img]][license-url]
 
-A library to simplify creating data structures needed for graphics APIs such as a Vulkan `vk::Surface`, an OpenGL context, a DirectX `ComPtr<IDXGISwapChain>`, or Metal `MTLView`.
+A header only library to simplify creating data structures needed for graphics APIs such as a Vulkan `vk::Surface`, an OpenGL context, a DirectX `ComPtr<IDXGISwapChain>`, or Metal `MTLView`.
 
 ## Supports
 
@@ -97,6 +97,10 @@ Alternatively you can set the following preprocessor definitions manually:
 | `XGFX_OPENGL` |  OpenGL 4.x and OpenGL ES 3.x. |
 | `XGFX_DIRECTX12` | DirectX 12.x. |
 | `XGFX_METAL` | Metal 1 or 2. |
+
+## Design Decisions
+
+The official Khronos Group's Vulkan Samples features an [OpenGL driver info example](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/driverinfo/driverinfo_opengl.c) and [Vulkan cube example](https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/demos/cube.c) that the OpenGL/Vulkan portions of this library pull heavily from, but diverges with the decision to separate operating systems by protocol (similar to the design of CrossWindow).
 
 ## License
 

@@ -61,7 +61,7 @@ inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
     createInfo.pNext = NULL;
     createInfo.flags = 0;
     createInfo.dpy = del.display;
-    createInfo.window = del.xlib_window;
+    createInfo.window = del.window;
 
     result = vkCreateXlibSurfaceKHR(static_cast<VkInstance>(instance), &info, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_XCB_KHR)
@@ -70,7 +70,7 @@ inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
     createInfo.pNext = NULL;
     createInfo.flags = 0;
     createInfo.connection = del.connection;
-    createInfo.window = del.xcb_window;
+    createInfo.window = del.window;
 
     result = vkCreateXcbSurfaceKHR(static_cast<VkInstance>(instance), &info, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_DISPLAY_KHR)
@@ -80,7 +80,7 @@ inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
     surface.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK;
     surface.pNext = NULL;
     surface.flags = 0;
-    surface.pView = del.window;
+    surface.pView = del.view;
 
     result = vkCreateIOSSurfaceMVK(static_cast<VkInstance>(instance), &info, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_MACOS_MVK)
@@ -88,7 +88,7 @@ inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
     info.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
     info.pNext = NULL;
     info.flags = 0;
-    info.pView = del.window;
+    info.pView = del.view;
 
     result = vkCreateMacOSSurfaceMVK(static_cast<VkInstance>(instance), &info, NULL, &surface);
 #endif
