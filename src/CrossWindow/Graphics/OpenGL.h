@@ -48,6 +48,8 @@
 #include <GLES3/gl31.h>
 #endif
 #include <GLES3/gl3ext.h>
+#if defined(XWIN_WASM)
+//TODO:
 #endif
 
 namespace xgfx
@@ -86,22 +88,26 @@ namespace xgfx
 		EGLSurface tinySurface;
 		EGLSurface mainSurface;
 		EGLContext context;
+		#elif defined(XWIN_WASM)
+		   /// Window handle
+   EGLNativeWindowType  hWnd;
+
+   /// EGL display
+   EGLDisplay  eglDisplay;
+      
+   /// EGL context
+   EGLContext  eglContext;
+
+   /// EGL surface
+   EGLSurface  eglSurface;
+
 #endif
 	} OpenGLState;
 
 	struct
 	{
-#if defined(XWIN_WIN32)
-
-#elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
-
-#elif defined(XWIN_XCB)
-
-#elif defined(XWIN_XLIB)
-
-#elif defined(XWIN_ANDROID)
-
-#endif
+		int pixelFormat;
+		
 	} OpenGLDesc;
 
 	inline OpenGLState createContext(Window *window, const OpenGLDesc &desc)
@@ -423,7 +429,7 @@ namespace xgfx
 			//Unable to create direct rendering context.");
 			return state;
 		}
-#elif defined(XWIN_ANDROID)
+#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
 
 		EGLint majorVersion = OPENGL_VERSION_MAJOR;
 		EGLint minorVersion = OPENGL_VERSION_MINOR;
@@ -514,6 +520,9 @@ namespace xgfx
 			return state;
 		}
 		state.mainSurface = state.tinySurface;
+#elif defined(XWIN_WASM)
+
+
 #endif
 
 		return state;
@@ -532,7 +541,7 @@ namespace xgfx
 		free(glx_make_current_reply);
 #elif defined(XWIN_XLIB)
 		glXMakeCurrent(state.display, state.glxDrawable, state.glxContext);
-#elif defined(XWIN_ANDROID)
+#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
 		EGL(eglMakeCurrent(state.display, state.mainSurface, state.mainSurface, state.context));
 #endif
 	}
@@ -547,7 +556,7 @@ namespace xgfx
 		glXMakeCurrent(state.display, None, NULL);
 #elif defined(XWIN_XCB)
 		xcb_glx_make_current(state.connection, 0, 0, 0);
-#elif defined(XWIN_ANDROID)
+#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
 		EGL(eglMakeCurrent(state.display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
 #endif
 	}
@@ -555,14 +564,14 @@ namespace xgfx
 	inline void destroyContext(const OpenGLDesc &state)
 	{
 #if defined(XWIN_WIN32)
-		wglDeleteContext(context);
+		wglDeleteContext(state.hglrc);
 #elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
 		CGLDeleteContext();
 #elif defined(XWIN_XLIB)
 		glXDeleteContext();
 #elif defined(XWIN_XCB)
 		xcb_glx_delete_current(state.connection, 0, 0, 0);
-#elif defined(XWIN_ANDROID)
+#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
 		eglDeleteContext();
 #endif
 		return true;
@@ -578,7 +587,7 @@ namespace xgfx
 		return (glXGetCurrentContext() == state.glxContext);
 #elif defined(XWIN_XCB)
 		return true;
-#elif defined(XWIN_ANDROID)
+#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
 		return (eglGetCurrentContext() == state.context);
 #endif
 	}

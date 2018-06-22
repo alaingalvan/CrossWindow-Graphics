@@ -9,7 +9,7 @@ add_library(CrossWindowGraphics INTERFACE)
 
 target_include_directories(
   CrossWindowGraphics INTERFACE
-  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 set(XGFX_PROTOCOL AUTO CACHE STRING "A more specific platform selector to choose from, choose the exact graphics protocol to use, defaults to VULKAN, can be VULKAN, OPENGL, DIRECTX12, or METAL.")
 set_property(

@@ -1,5 +1,6 @@
 # CrossWindow-Graphics
 
+[![cmake-img]][cmake-url]
 [![License][license-img]][license-url]
 
 A header only library to simplify creating data structures needed for graphics APIs such as a Vulkan `vk::Surface`, an OpenGL context, a DirectX `ComPtr<IDXGISwapChain>`, or Metal `MTLView`.
@@ -29,9 +30,11 @@ target_link_libraries(
     ${PROJECT_NAME}
     CrossWindowGraphics
 )
+```
 
-# Or...
+Alternatively if you don't want an extra project in your solution, you can just include the directory and add preprocessor definitions to your project:
 
+```cmake
 # 🤯 Since it's a header only library, you just need to include the headers!
 target_include_directories(exteral/crosswindow-graphics/src)
 
@@ -106,5 +109,7 @@ The official Khronos Group's Vulkan Samples features an [OpenGL driver info exam
 
 CrossWindow is licensed as either **MIT** or **Apache-2.0**, whichever you would prefer.
 
+[cmake-img]: https://img.shields.io/badge/cmake-3.6-1f9948.svg?style=flat-square
+[cmake-url]: https://cmake.org/
 [license-img]: https://img.shields.io/:license-mit-blue.svg?style=flat-square
 [license-url]: https://opensource.org/licenses/MIT

@@ -3,7 +3,7 @@
 #if defined(XGFX_METAL) && (defined(XWIN_COCOA) || defined(XWIN_UIKIT))
 namespace xwin
 {
-  CAMetalLayer* createMetalView(Window* window)
+  CAMetalLayer* createMetalLayer(Window* window)
   {
         const xwin::WindowDelegate& del = window->getDelegate();
         [del.view setWantsLayer:Yes];
