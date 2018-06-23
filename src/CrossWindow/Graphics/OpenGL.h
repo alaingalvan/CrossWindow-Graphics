@@ -615,6 +615,21 @@ namespace xgfx
 #endif
 	}
 
+	inline void swapBuffers(const OpenGLState& state)
+	{
+		#if defined(XWIN_WIN32)
+		SwapBuffers(state.hdc);
+		#elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
+		[state.context.nsgl.object flushBuffer];
+#elif defined(XWIN_XLIB)
+		glXSwapBuffers(state.x11.display, state.context.glx.window);
+#elif defined(XWIN_XCB)
+		return true;
+#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
+		eglSwapBuffers(state.display, state.surface);
+		#endif
+	}
+
 }
 
 #endif
