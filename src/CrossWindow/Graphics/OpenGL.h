@@ -1,7 +1,9 @@
 #pragma once
 
 #if defined(XGFX_OPENGL)
+
 #if defined(XWIN_WIN32)
+#pragma comment(lib,"opengl32.lib")
 #define OPENGL_VERSION_MAJOR 4
 #define OPENGL_VERSION_MINOR 3
 #include <windows.h>
@@ -22,7 +24,7 @@
 #elif defined(XWIN_XCB) || defined(XWIN_XLIB)
 #define OPENGL_VERSION_MAJOR 4
 #define OPENGL_VERSION_MINOR 3
-#if defined(XWIN_XLIB)
+#elif defined(XWIN_XLIB)
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/xf86vmode.h> // for fullscreen video mode
@@ -35,7 +37,6 @@
 #include <xcb/randr.h>
 #include <xcb/glx.h>
 #include <xcb/dri2.h>
-#endif
 #include <GL/glx.h>
 #elif defined(XWIN_ANDROID)
 #define OPENGL_VERSION_MAJOR 3
@@ -48,15 +49,37 @@
 #include <GLES3/gl31.h>
 #endif
 #include <GLES3/gl3ext.h>
-#if defined(XWIN_WASM)
+#elif defined(XWIN_WASM)
 //TODO:
 #endif
 
 namespace xgfx
 {
 
+#if defined( XWIN_WIN32 )
+	inline PROC GetExtension(const char * functionName)
+	{
+		return wglGetProcAddress(functionName);
+	}
+#elif defined( XWIN_XCB ) || defined( XWIN_XLIB ) || defined( XWIN_WAYLAND ) || defined( XWIN_MIR )
+	void(*GetExtension(const char * functionName))()
+	{
+		return glXGetProcAddress((const GLubyte *)functionName);
+	}
+#endif
+
+#if !defined( GL_SR8_EXT )
+#define GL_SR8_EXT					0x8FBD
+#endif
+#if !defined( GL_SRG8_EXT )
+#define GL_SRG8_EXT					0x8FBE
+#endif
+#if !defined( EGL_OPENGL_ES3_BIT )
+#define EGL_OPENGL_ES3_BIT			0x0040
+#endif
+
 	//Cross Platform OpenGL Context State
-	struct
+	struct OpenGLState
 	{
 #if defined(XWIN_WIN32)
 		HWND hwnd;
@@ -88,41 +111,42 @@ namespace xgfx
 		EGLSurface tinySurface;
 		EGLSurface mainSurface;
 		EGLContext context;
-		#elif defined(XWIN_WASM)
-		   /// Window handle
-   EGLNativeWindowType  hWnd;
+#elif defined(XWIN_WASM)
+		/// Window handle
+		EGLNativeWindowType  hWnd;
 
-   /// EGL display
-   EGLDisplay  eglDisplay;
-      
-   /// EGL context
-   EGLContext  eglContext;
+		/// EGL display
+		EGLDisplay  eglDisplay;
 
-   /// EGL surface
-   EGLSurface  eglSurface;
+		/// EGL context
+		EGLContext  eglContext;
+
+		/// EGL surface
+		EGLSurface  eglSurface;
 
 #endif
-	} OpenGLState;
+	};
 
-	struct
+	// OpenGL context initialization data
+	struct OpenGLDesc
 	{
 		int pixelFormat;
-		
-	} OpenGLDesc;
 
-	inline OpenGLState createContext(Window *window, const OpenGLDesc &desc)
+	};
+
+	inline OpenGLState createContext(xwin::Window *window, const OpenGLDesc &desc)
 	{
-    
+
 		const xwin::WindowDelegate& del = window->getDelegate();
 
-		const XWinState& xwinState = getXWinState();
-        
+		const xwin::XWinState& xwinState = xwin::getXWinState();
+
 		OpenGLState state;
 
 #if defined(XWIN_WIN32)
-		state.hwnd = del->hwnd;
+		state.hwnd = del.hwnd;
 
-		HDC state.hdc = GetDC(state.hwnd);
+		state.hdc = GetDC(state.hwnd);
 
 		if (!state.hdc)
 		{
@@ -528,7 +552,7 @@ namespace xgfx
 		return state;
 	}
 
-	inline void setContext(OpenGLState state)
+	inline void setContext(const OpenGLState& state)
 	{
 #if defined(XWIN_WIN32)
 		wglMakeCurrent(state.hdc, state.hglrc);
@@ -546,7 +570,7 @@ namespace xgfx
 #endif
 	}
 
-	inline void unsetContext(const OpenGLDesc &state)
+	inline void unsetContext(const OpenGLState& state)
 	{
 #if defined(XWIN_WIN32)
 		wglMakeCurrent(state.hdc, NULL);
@@ -561,7 +585,7 @@ namespace xgfx
 #endif
 	}
 
-	inline void destroyContext(const OpenGLDesc &state)
+	inline void destroyContext(const OpenGLState& state)
 	{
 #if defined(XWIN_WIN32)
 		wglDeleteContext(state.hglrc);
@@ -574,10 +598,9 @@ namespace xgfx
 #elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
 		eglDeleteContext();
 #endif
-		return true;
 	}
 
-	inline bool getCurrentContext(const OpenGLDesc &state)
+	inline bool getCurrentContext(const OpenGLState& state)
 	{
 #if defined(XWIN_WIN32)
 		return (wglGetCurrentContext() == state.hglrc);
@@ -592,7 +615,6 @@ namespace xgfx
 #endif
 	}
 
-} // namespace xgfx
+}
 
-#endif
 #endif
