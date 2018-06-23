@@ -5,11 +5,9 @@ namespace xwin
 {
   CAMetalLayer* createMetalLayer(Window* window)
   {
-        const xwin::WindowDelegate& del = window->getDelegate();
-        [del.view setWantsLayer:Yes];
-        CAMetalLayer* layer = [[CAMetalLayer init];
-        [del.view setLayer:layer];
-        return layer;
+	  const xwin::WindowDelegate& del = window->getDelegate();
+	  del.setLayer(xwin::WindowDelegate::LayerType::Metal);
+	  return del.layer;
   }
 }
 #endif

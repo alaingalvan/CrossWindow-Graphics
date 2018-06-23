@@ -6,10 +6,10 @@
 #define VK_USE_PLATFORM_WIN32_KHR
 #elif defined(XWIN_COCOA)
 #define VK_USE_PLATFORM_MACOS_MVK
-#elif defined(XWIN_XCB)
-#define VK_USE_PLATFORM_XCB_KHR
 #elif defined(XWIN_UIKIT)
 #define VK_USE_PLATFORM_IOS_MVK
+#elif defined(XWIN_XCB)
+#define VK_USE_PLATFORM_XCB_KHR
 #elif defined(XWIN_ANDROID)
 #define VK_USE_PLATFORM_ANDROID_KHR
 #endif
@@ -23,7 +23,7 @@ namespace xgfx
 inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
 {
 
-    const xwin::WindowDelegate& del = window->getDelegate();
+    xwin::WindowDelegate& del = window->getDelegate();
 
     VkSurfaceKHR surface;
     VkResult result = VK_RESULT_MAX_ENUM;
@@ -84,6 +84,9 @@ inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
 
     result = vkCreateIOSSurfaceMVK(static_cast<VkInstance>(instance), &info, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_MACOS_MVK)
+	
+	del.setLayer(xwin::WindowDelegate::LayerType::Metal);
+	
     VkMacOSSurfaceCreateInfoMVK info;
     info.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
     info.pNext = NULL;

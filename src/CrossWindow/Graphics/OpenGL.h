@@ -595,3 +595,4 @@ namespace xgfx
 } // namespace xgfx
 
 #endif
+#endif

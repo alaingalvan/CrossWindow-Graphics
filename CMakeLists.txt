@@ -17,4 +17,4 @@ set_property(
     XGFX_PROTOCOL PROPERTY
     STRINGS VULKAN OPENGL DIRECTX12 METAL
 )
-target_compile_definitions(${PROJECT_NAME} PRIVATE XGFX_${XGFX_PROTOCOL}=1)
+target_compile_definitions(CrossWindowGraphics INTERFACE XGFX_${XGFX_PROTOCOL}=1)
