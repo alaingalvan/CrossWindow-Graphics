@@ -4,8 +4,12 @@
 
 #if defined(XWIN_WIN32)
 #pragma comment(lib,"opengl32.lib")
+#if !defined(OPENGL_VERSION_MAJOR)
 #define OPENGL_VERSION_MAJOR 4
-#define OPENGL_VERSION_MINOR 3
+#endif
+#if !defined(OPENGL_VERSION_MINOR)
+#define OPENGL_VERSION_MINOR 5
+#endif
 #include <windows.h>
 #include <GL/gl.h>
 #define GL_EXT_color_subtable

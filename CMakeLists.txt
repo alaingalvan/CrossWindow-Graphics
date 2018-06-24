@@ -17,4 +17,23 @@ set_property(
     XGFX_PROTOCOL PROPERTY
     STRINGS VULKAN OPENGL DIRECTX12 METAL
 )
+
+if(XGFX_PROTOCOL STREQUAL "AUTO")
+  set(XGFX_PROTOCOL VULKAN)
+endif()
+
+if(XGFX_PROTOCOL STREQUAL "VULKAN")
+    set(XGFX_PROTOCOL_PATH "Vulkan")
+elseif(XGFX_PROTOCOL STREQUAL "OPENGL")
+    set(XGFX_PROTOCOL_PATH "OpenGL")
+elseif(XGFX_PROTOCOL STREQUAL "DIRECTX12")
+    set(XGFX_PROTOCOL_PATH "DirectX 12")
+elseif(XGFX_PROTOCOL STREQUAL "METAL")
+    set(XGFX_PROTOCOL_PATH "Metal")
+else()
+    message( SEND_ERROR "XGFX_PROTOCOL can only be either AUTO, VULKAN, OPENGL, DIRECTX12, or METAL.")
+endif()
+
+message( STATUS "Using the " ${XGFX_PROTOCOL_PATH} " graphics API with CrossWindow")
+
 target_compile_definitions(CrossWindowGraphics INTERFACE XGFX_${XGFX_PROTOCOL}=1)
