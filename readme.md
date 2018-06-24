@@ -3,14 +3,14 @@
 [![cmake-img]][cmake-url]
 [![License][license-img]][license-url]
 
-A header only library to simplify creating data structures needed for graphics APIs such as a Vulkan `vk::Surface`, an OpenGL context, a DirectX `ComPtr<IDXGISwapChain>`, or Metal `MTLView`.
+A header only library to simplify creating and managing data structures needed for graphics APIs such as a Vulkan `vk::Surface`, an OpenGL context, a DirectX `IDXGISwapChain1`, or Metal `CAMetalLayer`.
 
 ## Supports
 
  - 🌋 Vulkan
  - ⚪ OpenGL 4.x / OpenGL ES 3.x / 🌐 WebGL
  - ❎DirectX 12
- - 🤖 Metal 2 
+ - 🤖 Metal
 
 ## Installation
 
@@ -26,22 +26,11 @@ Then in your `CMakeLists.txt` file, include the following:
 ```cmake
 add_subdirectory(external/crosswindow-graphics)
 
+# 🤯 CrossWindowGraphics is a header only library, so no polluting your project list.
 target_link_libraries(
     ${PROJECT_NAME}
     CrossWindowGraphics
 )
-```
-
-Alternatively if you don't want an extra project in your solution, you can just include the directory and add preprocessor definitions to your project:
-
-```cmake
-# 🤯 Since it's a header only library, you just need to include the headers!
-target_include_directories(exteral/crosswindow-graphics/src)
-
-# Set up CrossWindow as usual...
-
-# Make sure to add a preprocessor defintion for your target graphics API:
-target_compile_definitions(${PROJECT_NAME} PRIVATE XGFX_VULKAN=1)
 ```
 
 ## Usage
@@ -52,21 +41,25 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE XGFX_VULKAN=1)
 
 void xmain(int argc, char** argv)
 {
-  // create your xwin::Window...
+  // 🖼️ Create your xwin::Window...
   xwin::Window window;
   
   // ...
   
 #if defined(XGFX_VULKAN)
-
+  
+  // 🌋 Vulkan Surface
   vk::Surface surface = xwin::createSurface(&window, instance);
 
 #elif defined(XGFX_OPENGL)
-  // Platform specific context data can be found inside xwin::OpenGLState
+
+  // ⚪ OpenGL 4.x / OpenGL ES 3.x / 🌐 WebGL platform specific context data
   xwin::OpenGLDesc desc;
   xwin::OpenGLState state = xwin::createContext(&window, desc);
 
   xwin::setContext(state);
+
+  xwin::swapBuffers(state);
 
   xwin::unsetContext(state);
 
@@ -74,13 +67,14 @@ void xmain(int argc, char** argv)
 
 #elif defined(XGFX_DIRECTX12)
 
-  ComPtr<IDXGISwapChain1> swapchain = xwin::createSwapchain(&window, factory, queue, &swapchainDesc);
+  // ❎ DirectX 12 Swapchain
+  IDXGISwapChain1* swapchain = xgfx::createSwapchain(window, factory, commandQueue, &swapchainDesc);
 
 #elif defined(XWIN_METAL)
-  // A pointer to MTKView will only work on an `.mm` file:
-  MTKView* view = xwin::createMetalView(&window);
-  id<MTLDevice> device = view.device;
-  // ...
+
+  // 🤖 Metal Layer
+  CAMetalLayer* layer = xwin::createMetalLayer(&window);
+
 #endif
 }
 
@@ -90,7 +84,7 @@ void xmain(int argc, char** argv)
 
 | CMake Options | Description |
 |:-------------:|:-----------:|
-| `XGFX_PROTOCOL` | The protocol to use for your graphics API, defaults to `VULKAN`, can be can be `VULKAN`, `OPENGL`, `DIRECTX12`, or `METAL`. |
+| `XGFX_PROTOCOL` | The protocol to use for your graphics API, defaults to `VULKAN`, can be can be `VULKAN`, `OPENGL`, `DIRECTX12`, `METAL`, or `NONE`. |
 
 Alternatively you can set the following preprocessor definitions manually:
 
@@ -104,6 +98,8 @@ Alternatively you can set the following preprocessor definitions manually:
 ## Design Decisions
 
 The official Khronos Group's Vulkan Samples features an [OpenGL driver info example](https://github.com/KhronosGroup/Vulkan-Samples/blob/master/samples/apps/driverinfo/driverinfo_opengl.c) and [Vulkan cube example](https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/demos/cube.c) that the OpenGL/Vulkan portions of this library pull heavily from, but diverges with the decision to separate operating systems by protocol (similar to the design of CrossWindow).
+
+You can read more [in our docs](docs/design-decisions.md).
 
 ## License
 
