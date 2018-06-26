@@ -1,13 +1,13 @@
 #pragma once
 
 #if defined(XGFX_METAL) && (defined(XWIN_COCOA) || defined(XWIN_UIKIT))
-namespace xwin
+
+namespace xgfx
 {
-  CAMetalLayer* createMetalLayer(Window* window)
+	inline void createMetalLayer(xwin::Window* window)
   {
-	  const xwin::WindowDelegate& del = window->getDelegate();
+	  xwin::WindowDelegate& del = window->getDelegate();
 	  del.setLayer(xwin::WindowDelegate::LayerType::Metal);
-	  return del.layer;
   }
 }
 #endif
