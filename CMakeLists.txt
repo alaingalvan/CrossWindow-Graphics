@@ -11,11 +11,11 @@ target_include_directories(
   CrossWindowGraphics INTERFACE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-set(XGFX_PROTOCOL AUTO CACHE STRING "A more specific platform selector to choose from, choose the exact graphics protocol to use, defaults to VULKAN, can be VULKAN, OPENGL, DIRECTX12, METAL, or NONE.")
+set(XGFX_PROTOCOL AUTO CACHE STRING "A more specific platform selector to choose from, choose the exact graphics protocol to use, defaults to VULKAN, can be VULKAN, OPENGL, DIRECTX12, DIRECTX11, METAL, or NONE.")
 set_property(
     CACHE
     XGFX_PROTOCOL PROPERTY
-    STRINGS VULKAN OPENGL DIRECTX12 METAL
+    STRINGS VULKAN OPENGL DIRECTX12 DIRECTX11 METAL
 )
 
 if(XGFX_PROTOCOL STREQUAL "AUTO")
@@ -28,12 +28,14 @@ elseif(XGFX_PROTOCOL STREQUAL "OPENGL")
     set(XGFX_PROTOCOL_PATH "OpenGL")
 elseif(XGFX_PROTOCOL STREQUAL "DIRECTX12")
     set(XGFX_PROTOCOL_PATH "DirectX 12")
+elseif(XGFX_PROTOCOL STREQUAL "DIRECTX11")
+    set(XGFX_PROTOCOL_PATH "DirectX 11")
 elseif(XGFX_PROTOCOL STREQUAL "METAL")
     set(XGFX_PROTOCOL_PATH "Metal")
 elseif(XGFX_PROTOCOL STREQUAL "NONE")
     set(XGFX_PROTOCOL_PATH "None")
 else()
-    message( SEND_ERROR "XGFX_PROTOCOL can only be either AUTO, VULKAN, OPENGL, DIRECTX12, or METAL.")
+    message( SEND_ERROR "XGFX_PROTOCOL can only be either AUTO, VULKAN, OPENGL, DIRECTX12, DIRECTX11, METAL, or NONE.")
 endif()
 
 if(NOT( XGFX_PROTOCOL STREQUAL "NONE" ))

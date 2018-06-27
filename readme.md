@@ -9,7 +9,7 @@ A header only library to simplify creating and managing data structures needed f
 
  - 🌋 Vulkan
  - ⚪ OpenGL 4.x / OpenGL ES 3.x / 🌐 WebGL
- - ❎DirectX 12
+ - ❎DirectX 12 / 11
  - 🤖 Metal
 
 ## Installation
@@ -70,10 +70,15 @@ void xmain(int argc, char** argv)
   // ❎ DirectX 12 Swapchain
   IDXGISwapChain1* swapchain = xgfx::createSwapchain(window, factory, commandQueue, &swapchainDesc);
 
+#elif defined(XGFX_DIRECTX11)
+
+  // ❌ DirectX 11 Swapchain
+  IDXGISwapChain* swapchain = xgfx::createSwapchain(window, factory, device, &swapchainDesc);
+
 #elif defined(XWIN_METAL)
 
   // 🤖 Metal Layer
-  CAMetalLayer* layer = xwin::createMetalLayer(&window);
+  xwin::createMetalLayer(&window);
 
 #endif
 }
