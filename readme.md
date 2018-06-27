@@ -98,6 +98,7 @@ Alternatively you can set the following preprocessor definitions manually:
 | `XGFX_VULKAN` |  Vulkan 1.x. |
 | `XGFX_OPENGL` |  OpenGL 4.x and OpenGL ES 3.x. |
 | `XGFX_DIRECTX12` | DirectX 12.x. |
+| `XGFX_DIRECTX11` | DirectX 11.x. |
 | `XGFX_METAL` | Metal 1 or 2. |
 
 ## Design Decisions
