@@ -16,8 +16,10 @@ namespace xgfx
     inline IDXGISwapChain* createSwapchain(xwin::Window* window, IDXGIFactory* factory, ID3D11Device* device, DXGI_SWAP_CHAIN_DESC* swapchainDesc)
     {
 		xwin::WindowDelegate& del = window->getDelegate();
+		xwin::WindowDesc desc = window->getDesc();
 
-        s->OutputWindow = del.hwnd;
+        swapchainDesc->OutputWindow = del.hwnd;
+		swapchainDesc->Windowed = !desc.fullscreen;
 
         IDXGISwapChain* swapchain = nullptr;
         HRESULT hr = factory->CreateSwapChain(
