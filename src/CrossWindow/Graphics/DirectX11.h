@@ -3,7 +3,7 @@
 #if ( defined(XWIN_WIN32) || defined(XWIN_UWP) ) && defined(XGFX_DIRECTX11)
 
 #include "d3d11.h"
-#include <dxgi1_4.h>
+#include <dxgi1_2.h>
 #include <D3Dcompiler.h>
 
 #pragma comment (lib, "d3d11.lib")
