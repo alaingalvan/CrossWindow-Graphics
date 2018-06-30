@@ -8,15 +8,18 @@ A header only library to simplify creating and managing data structures needed f
 ## Supports
 
  - 🌋 Vulkan
- - ⚪ OpenGL 4.x / OpenGL ES 3.x / 🌐 WebGL
- - ❎DirectX 12 / 11
+ - ⚪ OpenGL 4.x
+ - ⚪ OpenGL ES 3.x
+ - 🌐 WebGL
+ - ❎ DirectX 12.x
+ - ✖️ DirectX 11.x
  - 🤖 Metal
 
 ## Installation
 
 First add the repo as a submodule in your dependencies folder such as `external/`:
 
-```
+```bash
 cd external
 git submodule add https://github.com/alaingalvan/crosswindow-graphics.git
 ```
@@ -26,7 +29,6 @@ Then in your `CMakeLists.txt` file, include the following:
 ```cmake
 add_subdirectory(external/crosswindow-graphics)
 
-# 🤯 CrossWindowGraphics is a header only library, so no polluting your project list.
 target_link_libraries(
     ${PROJECT_NAME}
     CrossWindowGraphics
@@ -57,28 +59,35 @@ void xmain(int argc, char** argv)
   xwin::OpenGLDesc desc;
   xwin::OpenGLState state = xwin::createContext(&window, desc);
 
+  // ⬇️ Set the context
   xwin::setContext(state);
 
+  // 🔀 Refresh your window
   xwin::swapBuffers(state);
 
+  // ⬆️ Unset the context
   xwin::unsetContext(state);
 
+  // ⬅️ Destroy the context
   xwin::destroyContext(state);
 
 #elif defined(XGFX_DIRECTX12)
 
-  // ❎ DirectX 12 Swapchain
+  // ❎ DirectX 12.x Swapchain
   IDXGISwapChain1* swapchain = xgfx::createSwapchain(window, factory, commandQueue, &swapchainDesc);
 
 #elif defined(XGFX_DIRECTX11)
 
-  // ❌ DirectX 11 Swapchain
+  // ✖️ DirectX 11.x Swapchain
   IDXGISwapChain* swapchain = xgfx::createSwapchain(window, factory, device, &swapchainDesc);
 
 #elif defined(XWIN_METAL)
 
   // 🤖 Metal Layer
   xwin::createMetalLayer(&window);
+
+  // 🍮 Access the layer from your window
+  CAMetalLayer* layer = (CAMetalLayer*)window.getDelegate().layer;
 
 #endif
 }
@@ -99,7 +108,7 @@ Alternatively you can set the following preprocessor definitions manually:
 | `XGFX_OPENGL` |  OpenGL 4.x and OpenGL ES 3.x. |
 | `XGFX_DIRECTX12` | DirectX 12.x. |
 | `XGFX_DIRECTX11` | DirectX 11.x. |
-| `XGFX_METAL` | Metal 1 or 2. |
+| `XGFX_METAL` | Metal 2 or 1. |
 
 ## Design Decisions
 
