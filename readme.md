@@ -89,7 +89,7 @@ void xmain(int argc, char** argv)
 
 | CMake Options | Description |
 |:-------------:|:-----------:|
-| `XGFX_PROTOCOL` | The protocol to use for your graphics API, defaults to `VULKAN`, can be can be `VULKAN`, `OPENGL`, `DIRECTX12`, `METAL`, or `NONE`. |
+| `XGFX_API` | The graphics API you're targeting, defaults to `VULKAN`, can be can be `VULKAN`, `OPENGL`, `DIRECTX12`, `METAL`, or `NONE`. |
 
 Alternatively you can set the following preprocessor definitions manually:
 
