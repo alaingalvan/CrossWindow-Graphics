@@ -8,8 +8,8 @@ A header only library to simplify creating and managing data structures needed f
 ## Supports
 
  - 🌋 Vulkan
- - ⚪ OpenGL 4.x
- - ⚪ OpenGL ES 3.x
+ - ⚪ OpenGL
+ - ⚪ OpenGL ES
  - 🌐 WebGL
  - ❎ DirectX 12.x
  - ✖️ DirectX 11.x
@@ -55,7 +55,7 @@ void xmain(int argc, char** argv)
 
 #elif defined(XGFX_OPENGL)
 
-  // ⚪ OpenGL 4.x / OpenGL ES 3.x / 🌐 WebGL platform specific context data
+  // ⚪ OpenGL / OpenGL ES / 🌐 WebGL platform specific context data
   xwin::OpenGLDesc desc;
   xwin::OpenGLState state = xwin::createContext(&window, desc);
 
@@ -104,11 +104,11 @@ Alternatively you can set the following preprocessor definitions manually:
 
 | Definition | Description |
 |:-------------:|:-----------:|
-| `XGFX_VULKAN` |  Vulkan 1.x. |
-| `XGFX_OPENGL` |  OpenGL 4.x and OpenGL ES 3.x. |
-| `XGFX_DIRECTX12` | DirectX 12.x. |
-| `XGFX_DIRECTX11` | DirectX 11.x. |
-| `XGFX_METAL` | Metal 2 or 1. |
+| `XGFX_VULKAN` |  Vulkan |
+| `XGFX_OPENGL` |  OpenGL / OpenGL ES / WebGL |
+| `XGFX_DIRECTX12` | DirectX 12.x |
+| `XGFX_DIRECTX11` | DirectX 11.x |
+| `XGFX_METAL` | Metal |
 
 ## Design Decisions
 
