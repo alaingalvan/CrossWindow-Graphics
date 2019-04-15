@@ -4,10 +4,10 @@
 
 namespace xgfx
 {
-	inline void createMetalLayer(xwin::Window* window)
-  {
-	  xwin::WindowDelegate& del = window->getDelegate();
-	  del.setLayer(xwin::WindowDelegate::LayerType::Metal);
-  }
+inline void createMetalLayer(xwin::Window* window)
+{
+    xwin::WindowDelegate& del = window->getDelegate();
+    del.setLayer(xwin::WindowDelegate::LayerType::Metal);
+}
 }
 #endif
