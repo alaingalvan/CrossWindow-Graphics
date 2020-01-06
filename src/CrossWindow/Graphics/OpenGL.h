@@ -140,15 +140,12 @@ struct OpenGLDesc
 
 inline OpenGLState createContext(xwin::Window* window, const OpenGLDesc& desc)
 {
-
-    const xwin::WindowDelegate& del = window->getDelegate();
-
     const xwin::XWinState& xwinState = xwin::getXWinState();
 
     OpenGLState state;
 
 #if defined(XWIN_WIN32)
-    state.hwnd = del.hwnd;
+    state.hwnd = window->hwnd;
 
     state.hdc = GetDC(state.hwnd);
 

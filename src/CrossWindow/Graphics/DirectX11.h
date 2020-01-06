@@ -18,10 +18,9 @@ inline IDXGISwapChain* createSwapchain(xwin::Window* window,
                                        ID3D11Device* device,
                                        DXGI_SWAP_CHAIN_DESC* swapchainDesc)
 {
-    xwin::WindowDelegate& del = window->getDelegate();
     xwin::WindowDesc desc = window->getDesc();
 
-    swapchainDesc->OutputWindow = del.hwnd;
+    swapchainDesc->OutputWindow = window->hwnd;
     swapchainDesc->Windowed = !desc.fullscreen;
 
     IDXGISwapChain* swapchain = nullptr;

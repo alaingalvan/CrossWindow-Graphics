@@ -87,7 +87,7 @@ void xmain(int argc, char** argv)
   xwin::createMetalLayer(&window);
 
   // 🍮 Access the layer from your window
-  CAMetalLayer* layer = (CAMetalLayer*)window.getDelegate().layer;
+  CAMetalLayer* layer = (CAMetalLayer*)window.layer;
 
 #endif
 }

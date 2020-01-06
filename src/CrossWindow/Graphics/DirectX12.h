@@ -20,11 +20,9 @@ inline IDXGISwapChain1*
                     DXGI_SWAP_CHAIN_FULLSCREEN_DESC* fullscreenDesc = nullptr,
                     IDXGIOutput* output = nullptr)
 {
-    xwin::WindowDelegate& del = window->getDelegate();
-
     IDXGISwapChain1* swapchain = nullptr;
     HRESULT hr = factory->CreateSwapChainForHwnd(
-        queue, del.hwnd, swapchainDesc, fullscreenDesc, output, &swapchain);
+        queue, window->hwnd, swapchainDesc, fullscreenDesc, output, &swapchain);
 
     if (!FAILED(hr))
     {
