@@ -22,8 +22,15 @@
 #include <Cocoa/Cocoa.h>
 #define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
 #include <OpenGL/OpenGL.h>
+#ifndef __gl_h_
+#define __gl_h_
+
+#endif
+#ifndef __gl3_h_
+#define __gl3_h_
 #include <OpenGL/gl3.h>
 #include <OpenGL/gl3ext.h>
+#endif
 
 #elif defined(XWIN_XCB) || defined(XWIN_XLIB)
 #define OPENGL_VERSION_MAJOR 4
@@ -710,7 +717,7 @@ inline void destroyContext(const OpenGLState& state)
 #if defined(XWIN_WIN32)
     wglDeleteContext(state.hglrc);
 #elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
-    CGLDeleteContext();
+    //CGLDeleteContext();
 #elif defined(XWIN_XLIB)
     glXDeleteContext();
 #elif defined(XWIN_XCB)
@@ -740,7 +747,7 @@ inline void swapBuffers(const OpenGLState& state)
 #if defined(XWIN_WIN32)
     SwapBuffers(state.hdc);
 #elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
-    [state.context.nsgl.object flushBuffer];
+	CGLFlushDrawable(state.cglContext);
 #elif defined(XWIN_XLIB)
     glXSwapBuffers(state.x11.display, state.context.glx.window);
 #elif defined(XWIN_XCB)
