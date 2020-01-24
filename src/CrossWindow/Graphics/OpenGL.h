@@ -99,8 +99,8 @@ struct OpenGLState
     HGLRC hglrc;
 #elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
     CGDirectDisplayID display;
-    NSOpenGLContext* nsContext;
     CGLContextObj cglContext;
+	CAOpenGLLayer* layer;
 #elif defined(XWIN_XCB)
     Display* display;
     uint32_t screen;
@@ -229,46 +229,57 @@ inline OpenGLState createContext(xwin::Window* window, const OpenGLDesc& desc)
     }
 
 #elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
-    CGDirectDisplayID displays[32];
-    CGDisplayCount displayCount = 0;
-    CGDisplayErr err = CGGetActiveDisplayList(32, displays, &displayCount);
-    if (err != CGDisplayNoErr)
-    {
-        return state;
-    }
+	// Our desired format attributes
+	CGLPixelFormatAttribute attribs[13] = {
+		kCGLPFAOpenGLProfile, (CGLPixelFormatAttribute)kCGLOGLPVersion_GL4_Core,
+		kCGLPFAColorSize,     (CGLPixelFormatAttribute)24,
+		kCGLPFAAlphaSize,     (CGLPixelFormatAttribute)8,
+		kCGLPFAAccelerated,
+		kCGLPFADoubleBuffer,
+		kCGLPFASampleBuffers, (CGLPixelFormatAttribute)1,
+		kCGLPFASamples,       (CGLPixelFormatAttribute)4,
+		(CGLPixelFormatAttribute)0
+	};
+	
+	// Get main display
+	CGDirectDisplayID displays[32];
+	CGDisplayCount displayCount = 0;
+	CGDisplayErr err = CGGetActiveDisplayList(32, displays, &displayCount);
+	if (err != CGDisplayNoErr)
+	{
+		return state;
+	}
+	state.display = displays[0];
+	
+	// Get Pixel Format
+	CGLPixelFormatObj pf;
+	GLint numPixelFormats;
+	CGLChoosePixelFormat(attribs, &pf, &numPixelFormats);
+	// Create Context
+	CGLCreateContext(pf, NULL, &state.cglContext);
+	
+	// Set Window layer
+	NSOpenGLView* glView;
+    NSOpenGLPixelFormatAttribute pixelFormatAttributes[] ={
+        NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core,
+            NSOpenGLPFAColorSize    , 24                           ,
+            NSOpenGLPFAAlphaSize    , 8                            ,
+            NSOpenGLPFADoubleBuffer ,
+            NSOpenGLPFAAccelerated  ,
+            NSOpenGLPFANoRecovery   ,
+            0
+    };
+	NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc]initWithAttributes:pixelFormatAttributes];
 
-    // Use the main display.
-    state.display = displays[0];
+	glView = [[NSOpenGLView alloc]initWithFrame:NSMakeRect(0, 0, 640, 640)  pixelFormat:format];
+	//Set context and attach it to the window
+	  [[glView openGLContext]makeCurrentContext];
+	
+	  //finishing off
+	  [((NSWindow*)window->window) setContentView:glView];
+	  [glView prepareOpenGL];
+	state.cglContext = [[glView openGLContext] CGLContextObj];
 
-    NSOpenGLPixelFormatAttribute pixelFormatAttributes[] = {
-        NSOpenGLPFAMinimumPolicy,
-        1,
-        NSOpenGLPFAScreenMask,
-        CGDisplayIDToOpenGLDisplayMask(state.display),
-        NSOpenGLPFAAccelerated,
-        NSOpenGLPFAOpenGLProfile,
-        NSOpenGLProfileVersion3_2Core,
-        NSOpenGLPFADoubleBuffer,
-        NSOpenGLPFAColorSize,
-        32,
-        NSOpenGLPFADepthSize,
-        0,
-        0};
-
-    NSOpenGLPixelFormat* pixelFormat = [[[NSOpenGLPixelFormat alloc]
-        initWithAttributes:pixelFormatAttributes] autorelease];
-    if (pixelFormat == nil)
-    {
-        return state;
-    }
-    state.nsContext =
-        [[NSOpenGLContext alloc] initWithFormat:pixelFormat shareContext:nil];
-    if (state.nsContext == nil)
-    {
-        return state;
-    }
-
-    state.cglContext = [state.nsContext CGLContextObj];
 #elif defined(XWIN_XCB)
     const char* displayName = NULL;
     state.display = XOpenDisplay(displayName);
@@ -748,6 +759,7 @@ inline void swapBuffers(const OpenGLState& state)
 #if defined(XWIN_WIN32)
     SwapBuffers(state.hdc);
 #elif defined(XWIN_COCOA) || defined(XWIN_UIKIT)
+	glFlush();
 	CGLFlushDrawable(state.cglContext);
 #elif defined(XWIN_XLIB)
     glXSwapBuffers(state.x11.display, state.context.glx.window);
