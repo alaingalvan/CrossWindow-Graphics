@@ -61,7 +61,7 @@
 #endif
 #include <GLES3/gl3ext.h>
 #elif defined(XWIN_WASM)
-// TODO:
+#include <GLES3/gl3.h>
 #endif
 
 namespace xgfx
@@ -120,22 +120,12 @@ struct OpenGLState
 #elif defined(XWIN_ANDROID)
     EGLDisplay display;
     EGLConfig config;
-    EGLSurface tinySurface;
     EGLSurface mainSurface;
     EGLContext context;
-#elif defined(XWIN_WASM)
-    /// Window handle
     EGLNativeWindowType hWnd;
-
-    /// EGL display
-    EGLDisplay eglDisplay;
-
-    /// EGL context
     EGLContext eglContext;
-
-    /// EGL surface
-    EGLSurface eglSurface;
-
+#elif defined(XWIN_WASM)
+    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context;
 #endif
 };
 
@@ -583,7 +573,7 @@ inline OpenGLState createContext(xwin::Window* window, const OpenGLDesc& desc)
         // Unable to create direct rendering context.");
         return state;
     }
-#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
+#elif defined(XWIN_ANDROID)
 
     EGLint majorVersion = OPENGL_VERSION_MAJOR;
     EGLint minorVersion = OPENGL_VERSION_MINOR;
@@ -667,7 +657,9 @@ inline OpenGLState createContext(xwin::Window* window, const OpenGLDesc& desc)
     }
     state.mainSurface = state.tinySurface;
 #elif defined(XWIN_WASM)
-
+    EmscriptenWebGLContextAttributes attribs;
+    emscripten_webgl_init_context_attributes(&attribs);
+    state.context = emscripten_webgl_create_context(window->getDesc().name.c_str(), &attribs);
 #endif
 
     return state;
@@ -690,9 +682,11 @@ inline void setContext(const OpenGLState& state)
     free(glx_make_current_reply);
 #elif defined(XWIN_XLIB)
     glXMakeCurrent(state.display, state.glxDrawable, state.glxContext);
-#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
+#elif defined(XWIN_ANDROID)
     EGL(eglMakeCurrent(state.display, state.mainSurface, state.mainSurface,
                        state.context));
+#elif defined(XWIN_WASM)
+    emscripten_webgl_make_context_current(state.context);
 #endif
 }
 
@@ -706,9 +700,11 @@ inline void unsetContext(const OpenGLState& state)
     glXMakeCurrent(state.display, None, NULL);
 #elif defined(XWIN_XCB)
     xcb_glx_make_current(state.connection, 0, 0, 0);
-#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
+#elif defined(XWIN_ANDROID)
     EGL(eglMakeCurrent(state.display, EGL_NO_SURFACE, EGL_NO_SURFACE,
                        EGL_NO_CONTEXT));
+#elif defined(XWIN_WASM)
+
 #endif
 }
 
@@ -722,8 +718,10 @@ inline void destroyContext(const OpenGLState& state)
     glXDeleteContext();
 #elif defined(XWIN_XCB)
     xcb_glx_delete_current(state.connection, 0, 0, 0);
-#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
+#elif defined(XWIN_ANDROID)
     eglDeleteContext();
+#elif defined(XWIN_WASM)
+    emscripten_webgl_destroy_context(state.context);
 #endif
 }
 
@@ -737,8 +735,11 @@ inline bool getCurrentContext(const OpenGLState& state)
     return (glXGetCurrentContext() == state.glxContext);
 #elif defined(XWIN_XCB)
     return true;
-#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
+#elif defined(XWIN_ANDROID)
     return (eglGetCurrentContext() == state.context);
+#elif defined(XWIN_WASM)
+    EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context = emscripten_webgl_get_current_context();
+    return (context == state.context);
 #endif
 }
 
@@ -752,8 +753,10 @@ inline void swapBuffers(const OpenGLState& state)
     glXSwapBuffers(state.x11.display, state.context.glx.window);
 #elif defined(XWIN_XCB)
     return true;
-#elif defined(XWIN_ANDROID) || defined(XWIN_WASM)
+#elif defined(XWIN_ANDROID)
     eglSwapBuffers(state.display, state.surface);
+#elif defined(XWIN_WASM)
+    emscripten_webgl_commit_frame();
 #endif
 }
 }
