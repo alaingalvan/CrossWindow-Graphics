@@ -39,7 +39,7 @@ target_link_libraries(
 
 ```cpp
 #include "CrossWindow/CrossWindow.h"
-#include "CrossWindow/Graphics.h
+#include "CrossWindow/Graphics.h"
 
 void xmain(int argc, char** argv)
 {
