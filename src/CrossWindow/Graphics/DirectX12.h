@@ -22,7 +22,7 @@ inline IDXGISwapChain1*
 {
     IDXGISwapChain1* swapchain = nullptr;
     HRESULT hr = factory->CreateSwapChainForHwnd(
-        queue, window->hwnd, swapchainDesc, fullscreenDesc, output, &swapchain);
+        queue, window->getHwnd(), swapchainDesc, fullscreenDesc, output, &swapchain);
 
     if (!FAILED(hr))
     {

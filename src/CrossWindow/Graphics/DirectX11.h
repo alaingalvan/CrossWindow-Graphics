@@ -20,7 +20,7 @@ inline IDXGISwapChain* createSwapchain(xwin::Window* window,
 {
     xwin::WindowDesc desc = window->getDesc();
 
-    swapchainDesc->OutputWindow = window->hwnd;
+    swapchainDesc->OutputWindow = window->getHwnd();
     swapchainDesc->Windowed = !desc.fullscreen;
 
     IDXGISwapChain* swapchain = nullptr;
