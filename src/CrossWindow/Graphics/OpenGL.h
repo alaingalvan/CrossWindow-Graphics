@@ -140,7 +140,7 @@ inline OpenGLState createContext(xwin::Window* window, const OpenGLDesc& desc)
     OpenGLState state;
 
 #if defined(XWIN_WIN32)
-    state.hwnd = window->hwnd;
+    state.hwnd = window->getHwnd();
 
     state.hdc = GetDC(state.hwnd);
 
