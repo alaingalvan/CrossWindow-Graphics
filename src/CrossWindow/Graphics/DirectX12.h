@@ -3,13 +3,11 @@
 #if (defined(XWIN_WIN32) || defined(XWIN_UWP)) && defined(XGFX_DIRECTX12)
 
 #include "d3d12.h"
-#include <D3Dcompiler.h>
 #include <dxgi1_4.h>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
-#pragma comment(lib, "d3dcompiler.lib")
 
 namespace xgfx
 {

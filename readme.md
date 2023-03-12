@@ -56,20 +56,20 @@ void xmain(int argc, char** argv)
 #elif defined(XGFX_OPENGL)
 
   // ⚪ OpenGL / OpenGL ES / 🌐 WebGL platform specific context data
-  xwin::OpenGLDesc desc;
-  xwin::OpenGLState state = xwin::createContext(&window, desc);
+  xgfx::OpenGLDesc desc;
+  xgfx::OpenGLState state = xgfx::createContext(&window, desc);
 
   // ⬇️ Set the context
-  xwin::setContext(state);
+  xgfx::setContext(state);
 
   // 🔀 Refresh your window
-  xwin::swapBuffers(state);
+  xgfx::swapBuffers(state);
 
   // ⬆️ Unset the context
-  xwin::unsetContext(state);
+  xgfx::unsetContext(state);
 
   // ⬅️ Destroy the context
-  xwin::destroyContext(state);
+  xgfx::destroyContext(state);
 
 #elif defined(XGFX_DIRECTX12)
 
@@ -84,7 +84,7 @@ void xmain(int argc, char** argv)
 #elif defined(XWIN_METAL)
 
   // 🤖 Metal Layer
-  xwin::createMetalLayer(&window);
+  xgfx::createMetalLayer(&window);
 
   // 🍮 Access the layer from your window
   CAMetalLayer* layer = (CAMetalLayer*)window.layer;
