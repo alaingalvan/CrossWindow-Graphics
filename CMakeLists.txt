@@ -11,27 +11,27 @@ project(CrossWindowGraphics
 
 # Options
 
-set(XGFX_API AUTO CACHE STRING "The graphics API you're targeting, defaults to VULKAN, can be VULKAN, OPENGL, DIRECTX12, DIRECTX11, METAL, or NONE.")
+set(XGFX_API VULKAN CACHE STRING "The graphics API you're targeting, defaults to VULKAN, can be VULKAN, DIRECTX12, METAL, DIRECTX11, OPENGL, or NONE.")
 set_property(
     CACHE
     XGFX_API PROPERTY
     STRINGS VULKAN OPENGL DIRECTX12 DIRECTX11 METAL
 )
 
-if(XGFX_API STREQUAL "VULKAN")
-    set(XGFX_API_PATH "Vulkan")
-elseif(XGFX_API STREQUAL "OPENGL")
-    set(XGFX_API_PATH "OpenGL")
-elseif(XGFX_API STREQUAL "DIRECTX12")
+if(XGFX_API STREQUAL "DIRECTX12")
     set(XGFX_API_PATH "DirectX 12")
-elseif(XGFX_API STREQUAL "DIRECTX11")
-    set(XGFX_API_PATH "DirectX 11")
+elseif(XGFX_API STREQUAL "VULKAN")
+    set(XGFX_API_PATH "Vulkan")
 elseif(XGFX_API STREQUAL "METAL")
     set(XGFX_API_PATH "Metal")
+elseif(XGFX_API STREQUAL "DIRECTX11")
+    set(XGFX_API_PATH "DirectX 11")
+elseif(XGFX_API STREQUAL "OPENGL")
+    set(XGFX_API_PATH "OpenGL")
 elseif(XGFX_API STREQUAL "NONE")
     set(XGFX_API_PATH "None")
 else()
-    message( SEND_ERROR "XGFX_API can only be either VULKAN, OPENGL, DIRECTX12, DIRECTX11, METAL, or NONE.")
+    message( SEND_ERROR "XGFX_API can only be either VULKAN, DIRECTX12, METAL, DIRECTX11, OPENGL, or NONE..")
 endif()
 
 # =============================================================
