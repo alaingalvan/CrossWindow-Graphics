@@ -19,41 +19,42 @@
 namespace xgfx
 {
 
-inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
+inline vk::SurfaceKHR createSurface(xwin::Window* window,
+                                    vk::Instance& instance)
 {
     VkSurfaceKHR surface;
     VkResult result = VK_RESULT_MAX_ENUM;
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
-    VkWin32SurfaceCreateInfoKHR info;
-    info.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-    info.pNext = NULL;
-    info.flags = 0;
-    info.hinstance = window->hinstance;
-    info.hwnd = window->hwnd;
+    VkWin32SurfaceCreateInfoKHR createInfo;
+    createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+    createInfo.pNext = NULL;
+    createInfo.flags = 0;
+    createInfo.hinstance = window->hinstance;
+    createInfo.hwnd = window->hwnd;
 
-    result = vkCreateWin32SurfaceKHR(static_cast<VkInstance>(instance), &info,
-                                     NULL, &surface);
+    result = vkCreateWin32SurfaceKHR(static_cast<VkInstance>(instance),
+                                     &createInfo, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_WAYLAND_KHR)
-    VkWaylandSurfaceCreateInfoKHR info;
+    VkWaylandSurfaceCreateInfoKHR createInfo;
     createInfo.sType = VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR;
     createInfo.pNext = NULL;
     createInfo.flags = 0;
     createInfo.display = window->display;
     createInfo.surface = window->window;
 
-    result = vkCreateWaylandSurfaceKHR(static_cast<VkInstance>(instance), &info,
-                                       NULL, &surface);
+    result = vkCreateWaylandSurfaceKHR(static_cast<VkInstance>(instance),
+                                       &createInfo, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_MIR_KHR)
 #elif defined(VK_USE_PLATFORM_ANDROID_KHR)
-    VkAndroidSurfaceCreateInfoKHR info;
+    VkAndroidSurfaceCreateInfoKHR craeteInfo;
     createInfo.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
     createInfo.pNext = NULL;
     createInfo.flags = 0;
     createInfo.window = (ANativeWindow*)(window->window);
 
-    result = vkCreateAndroidSurfaceKHR(static_cast<VkInstance>(instance), &info,
-                                       NULL, &surface);
+    result = vkCreateAndroidSurfaceKHR(static_cast<VkInstance>(instance),
+                                       &createInfo, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_XLIB_KHR)
     VkXlibSurfaceCreateInfoKHR createInfo;
     createInfo.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
@@ -62,8 +63,8 @@ inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
     createInfo.dpy = window->display;
     createInfo.window = window->window;
 
-    result = vkCreateXlibSurfaceKHR(static_cast<VkInstance>(instance), &info,
-                                    NULL, &surface);
+    result = vkCreateXlibSurfaceKHR(static_cast<VkInstance>(instance),
+                                    &createInfo, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_XCB_KHR)
     VkXcbSurfaceCreateInfoKHR createInfo;
     createInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
@@ -72,40 +73,33 @@ inline vk::SurfaceKHR getSurface(xwin::Window* window, vk::Instance& instance)
     createInfo.connection = window->connection;
     createInfo.window = window->window;
 
-    result = vkCreateXcbSurfaceKHR(static_cast<VkInstance>(instance), &info,
-                                   NULL, &surface);
+    result = vkCreateXcbSurfaceKHR(static_cast<VkInstance>(instance),
+                                   &createInfo, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_DISPLAY_KHR)
     err = demo_create_display_surface(demo);
 #elif defined(VK_USE_PLATFORM_IOS_MVK)
-    VkIOSSurfaceCreateInfoMVK surface;
-    surface.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK;
-    surface.pNext = NULL;
-    surface.flags = 0;
-    surface.pView = window->view;
+    VkIOSSurfaceCreateInfoMVK createInfo;
+    createInfo.sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK;
+    createInfo.pNext = NULL;
+    createInfo.flags = 0;
+    createInfo.pView = window->view;
 
-    result = vkCreateIOSSurfaceMVK(static_cast<VkInstance>(instance), &info,
-                                   NULL, &surface);
+    result = vkCreateIOSSurfaceMVK(static_cast<VkInstance>(instance),
+                                   &createInfo, NULL, &surface);
 #elif defined(VK_USE_PLATFORM_MACOS_MVK)
 
     window->setLayer(xwin::WindowDelegate::LayerType::Metal);
 
-    VkMacOSSurfaceCreateInfoMVK info;
-    info.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
-    info.pNext = NULL;
-    info.flags = 0;
-    info.pView = window->view;
+    VkMacOSSurfaceCreateInfoMVK createInfo;
+    createInfo.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
+    createinfo.pNext = NULL;
+    createinfo.flags = 0;
+    createinfo.pView = window->view;
 
-    result = vkCreateMacOSSurfaceMVK(static_cast<VkInstance>(instance), &info,
-                                     NULL, &surface);
+    result = vkCreateMacOSSurfaceMVK(static_cast<VkInstance>(instance),
+                                     &createInfo, NULL, &surface);
 #endif
-    if (result == VK_SUCCESS)
-    {
-        return vk::SurfaceKHR(surface);
-    }
-    else
-    {
-        // throw error
-    }
+    if (result == VK_SUCCESS) return vk::SurfaceKHR(surface);
     return vk::SurfaceKHR();
 }
 }
