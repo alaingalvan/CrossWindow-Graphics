@@ -35,7 +35,7 @@ namespace xgfx
 {
 
 inline vk::SurfaceKHR createSurface(xwin::Window* window,
-                                    vk::Instance& instance)
+                                    vk::Instance instance)
 {
     VkSurfaceKHR surface;
     VkResult result = VK_RESULT_MAX_ENUM;
